@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { useAppContext } from '../../Contex/Contex';
 const Input = () => {
   const [text, setText] = useState('');
-  const { notes, setNotes } = useAppContext() || {};
+  const [notes, setNotes] = useAppContext() || [];
 
   const addNote = () => {
     const trimmed = (text || '').trim();
     if (!trimmed || !setNotes) return; // nothing to add or context not available
 
     const newNote = {
-      id: Date.now().toString() + Math.random().toString(36).slice(2, 8),
+      id: Date.now(),
       text: trimmed,
       complete: false,
     };
@@ -22,18 +22,6 @@ const Input = () => {
 
   const onKeyDown = (e) => {
     if (e.key === 'Enter') addNote();
-  };
-
-  const toggleComplete = (id) => {
-    setNotes((prevNotes) =>
-      (Array.isArray(prevNotes) ? prevNotes : notes || []).map((note) =>
-        note.id === id ? { ...note, complete: !note.complete } : note
-      )
-    );
-  };
-
-  const deleteItem = (id) => {
-    setNotes((notes) => notes.filter((note) => note.id !== id));
   };
 
   return (
@@ -57,45 +45,6 @@ const Input = () => {
             </button>
           </div>
         </div>
-      </div>
-      <div className=" flex justify-center mt-5 gap-1.5">
-        {Array.isArray(notes) && notes.length > 0 ? (
-          notes.map((note) => (
-            <div
-              key={note.id}
-              className=" border-2 p-3 rounded-xl bg-yellow-200 border-green-500"
-            >
-              <div className=" flex gap-2 justify-center align-middle items-center">
-                <input
-                  type="checkbox"
-                  className="checkbox checkbox-accent"
-                  onChange={() => toggleComplete(note.id)}
-                  id={note.id}
-                  checked={!!note.complete}
-                  readOnly={false}
-                />{' '}
-                <label
-                  htmlFor={note.id}
-                  className={
-                    note.complete
-                      ? 'line-through text-gray-500  text-xl font-medium'
-                      : ' text-xl font-medium'
-                  }
-                >
-                  {note.text}
-                </label>
-                <button
-                  className="btn btn-error cursor-pointer"
-                  onClick={() => deleteItem(note.id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No notes add here</p>
-        )}
       </div>
     </>
   );

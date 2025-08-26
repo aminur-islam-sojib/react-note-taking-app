@@ -1,15 +1,14 @@
 import './App.css';
 import Input from './assets/components/Input/Input';
-import { useState } from 'react';
-import { ContextProvider } from './assets/Contex/Contex';
+import { AppProvider } from './assets/Contex/Contex';
+import Output from './assets/components/Output/Output';
 
 function App() {
-  const [notes, setNotes] = useState([]);
-
   return (
-    <ContextProvider value={{ notes, setNotes }}>
+    <AppProvider>
       <Input />
-    </ContextProvider>
+      <Output />
+    </AppProvider>
   );
 }
 
