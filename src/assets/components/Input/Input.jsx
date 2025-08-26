@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useAppContext } from '../../Contex/Contex';
-
 const Input = () => {
   const [text, setText] = useState('');
   const { notes, setNotes } = useAppContext() || {};
@@ -23,6 +22,14 @@ const Input = () => {
 
   const onKeyDown = (e) => {
     if (e.key === 'Enter') addNote();
+  };
+
+  const toggleComplete = (id) => {
+    setNotes((prevNotes) =>
+      (Array.isArray(prevNotes) ? prevNotes : notes || []).map((note) =>
+        note.id === id ? { ...note, complete: !note.complete } : note
+      )
+    );
   };
 
   return (
@@ -50,14 +57,21 @@ const Input = () => {
       <div className=" ">
         {Array.isArray(notes) && notes.length > 0 ? (
           notes.map((note) => (
-            <div>
+            <div key={note.id}>
               <input
                 type="checkbox"
-                defaultChecked
                 className="checkbox checkbox-accent"
+                onChange={() => toggleComplete(note.id)}
                 id={note.id}
+                checked={!!note.complete}
+                readOnly={false}
               />{' '}
-              <label htmlFor={note.id}>{note.text}</label>
+              <label
+                htmlFor={note.id}
+                className={note.complete ? 'line-through text-gray-500' : ''}
+              >
+                {note.text}
+              </label>
             </div>
           ))
         ) : (
